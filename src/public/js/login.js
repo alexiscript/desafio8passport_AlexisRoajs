@@ -5,31 +5,34 @@ const email = document.getElementById('email')
 const contraseña = document.getElementById('contraseña')
 
 
-
 const resetForm = () => {
     email.value = ''
     contraseña.value = ''
 }
 
 form.onsubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const user = {
         email: email.value,
         password: contraseña.value,
-    }
-
-
+    };
 
     try {
-        const { data } = await axios.post("http://localhost:8080/api/sessions/login", user)
-        console.log(data)
-        window.location.replace('http://localhost:8080/products')
-        resetForm()
+        const response = await axios.post("http://localhost:8080/login", user);
+        if (response.status === 200) {
+            const data = response.data;
+            localStorage.setItem("token", data.token);
+            if (data.token && data.user.adminRole === 'admin') {
+                /* window.location.href = '/admin'; */
+            } else if (data.token && data.user.adminRole === 'usuario') {
+                window.location.href = '/current';
+            }
+            console.log("Inicio de sesión exitoso");
+        } else {
+            console.error("Error en el inicio de sesión");
+        }
     } catch (error) {
-        console.log(error)
-        alert(error.response.data.error)
+        console.error("Error en el inicio de sesión", error);
     }
-
-
-}
+};

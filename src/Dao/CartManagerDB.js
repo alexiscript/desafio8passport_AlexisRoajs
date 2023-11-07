@@ -63,32 +63,38 @@ export default class CartManagerDB {
     }
 
     updateCart = async (cid, pid) => {
+        let cart = await this.getCartById(cid);
+        let pro = await ProductsModel.findById(pid);
 
-        let cart = await this.getCartById(cid)
-        let pro = await ProductsModel.findById(pid)
-        if (!pro || !cart) return " No keys matches with cart id"
+        if (!pro || !cart) {
+            return "No keys match with cart id";
+        }
 
-        if (cart.products.some(el => el.item._id.toString() == pid)) {
-            await this.updatePidQty(cid, pid)
-
+        if (cart.products.some(el => el.item && el.item._id && el.item._id.toString() === pid)) {
+            await this.updatePidQty(cid, pid);
         } else {
+            if (!pro._id) {
+                console.error("Product _id is undefined");
+                return "Product _id is undefined";
+            }
+
+            if (!cart.products) {
+                cart.products = [];
+            }
 
             cart.products.push({
                 item: pro._id
-            })
-
+            });
 
             try {
-                await cart.save()
-                return cart
+                await cart.save();
+                return cart;
             } catch (error) {
-                console.log(error)
-                return error
+                console.log(error);
+                return error;
             }
-
         }
-    }
-
+    };
 
     updateCartByArr = async (cid, arr) => {
         try {
@@ -140,7 +146,7 @@ export default class CartManagerDB {
                 await cart.save();
                 return cart;
             } else {
-                throw new Error(`Product with ID ${pid} not found in cart`);
+                throw new Error(`Producto con el ID ${pid} no encontrado en el carrito`);
             }
         } catch (error) {
             console.error(error);

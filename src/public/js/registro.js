@@ -1,4 +1,3 @@
-
 const divProducts = document.getElementById('products-container')
 const form = document.getElementById('formulario')
 const first_name = document.getElementById('first_name')
@@ -6,6 +5,7 @@ const last_name = document.getElementById('last_name')
 const email = document.getElementById('email')
 const age = document.getElementById('age')
 const password = document.getElementById('password')
+const adminRole = document.getElementById('adminRole')
 
 
 
@@ -20,8 +20,9 @@ const resetForm = () => {
 }
 
 
+
 form.onsubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const user = {
         first_name: first_name.value,
@@ -29,14 +30,26 @@ form.onsubmit = async (e) => {
         email: email.value,
         age: age.value,
         password: password.value,
-    }
-    console.log(user)
+        adminRole: adminRole.value
+    };
+
     try {
-        await axios.post("http://localhost:8080/api/sessions/registro", user)
-        alert("Registrado")
+        const response = await axios.post("http://localhost:8080/api/register", user);
+        if (response.status === 200) {
+            if (response.data) {
+                // Mensaje de alerta en lugar de SweetAlert si el registro es exitoso
+                const confirmation = confirm('¡Registro exitoso! ¿Desea ir a la página de inicio de sesión?');
+                if (confirmation) {
+                    window.location.href = 'http://localhost:8080/'; // Redirige a la página de inicio de sesión
+                } else {
+                    resetForm();
+                }
+            }
+        }
     } catch (error) {
-        console.log(error)
-        alert(error.response.data.error)
+        console.log(error);
+        if (error.response && error.response.data && error.response.data.error) {
+            alert(error.response.data.error);
+        }
     }
-    resetForm()
-}
+};

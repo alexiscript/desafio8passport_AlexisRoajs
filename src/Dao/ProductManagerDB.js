@@ -1,4 +1,4 @@
-import { ProductsModel } from "../db/models/Products.model.js"
+import { ProductsModel } from "../models/products.model.js"
 
 export default class ProductManager {
 
@@ -33,7 +33,7 @@ export default class ProductManager {
             let products = await ProductsModel.findById(id)
             if (products) return products
             else {
-                return { Error: "Not found" }
+                return { Error: "No encontrado" }
             }
         } catch (error) {
             console.log(error)
@@ -42,17 +42,17 @@ export default class ProductManager {
     }
 
     addProduct = async (productEn) => {
-        const { title, description, code, price, status, stock, category, thumbnails } = productEn
+        const { title, description, code, price, status, stock, category, thumbnail } = productEn
 
         if (title !== undefined && description !== undefined && code !== undefined && price !== undefined && stock !== undefined && category !== undefined) {
 
             try {
                 await ProductsModel.create(productEn)
-                return "Product added"
+                return "Producto agregado"
             } catch (e) {
                 throw new Error(e.message)
             }
-        } else throw new Error("Some fields are emptys")
+        } else throw new Error("Debe proporcionar todos los campos: title, description, code, price, stock, category, thumbnail (opcional).")
 
 
     }
@@ -63,7 +63,7 @@ export default class ProductManager {
             if (msg) {
                 let updated = await ProductsModel.findById(id)
                 return updated
-            } else throw new Error("Not found")
+            } else throw new Error("No encontrado")
         } catch (error) {
             throw error
         }
@@ -72,7 +72,7 @@ export default class ProductManager {
     deleteProduct = async (id) => {
         try {
             let deleted = await ProductsModel.findByIdAndDelete(id)
-            if (!deleted) throw new Error("Not found")
+            if (!deleted) throw new Error("No encontrado")
         } catch (error) {
             throw error
         }
