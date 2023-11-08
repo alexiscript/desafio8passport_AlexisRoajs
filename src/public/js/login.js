@@ -24,7 +24,7 @@ form.onsubmit = async (e) => {
             const data = response.data;
             localStorage.setItem("token", data.token);
             if (data.token && data.user.adminRole === 'admin') {
-                /* window.location.href = '/admin'; */
+               
             } else if (data.token && data.user.adminRole === 'usuario') {
                 window.location.href = '/current';
             }

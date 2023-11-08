@@ -34,7 +34,7 @@ form.onsubmit = async (e) => {
     };
 
     try {
-        const response = await axios.post("http://localhost:8080/api/registro", user);
+        const response = await axios.post("http://localhost:8080/api/register", user);
         if (response.status === 200) {
             if (response.data) {
                 
