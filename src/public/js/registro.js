@@ -34,10 +34,10 @@ form.onsubmit = async (e) => {
     };
 
     try {
-        const response = await axios.post("http://localhost:8080/api/register", user);
+        const response = await axios.post("http://localhost:8080/api/registro", user);
         if (response.status === 200) {
             if (response.data) {
-                // Mensaje de alerta en lugar de SweetAlert si el registro es exitoso
+                
                 const confirmation = confirm('¡Registro exitoso! ¿Desea ir a la página de inicio de sesión?');
                 if (confirmation) {
                     window.location.href = 'http://localhost:8080/'; // Redirige a la página de inicio de sesión
